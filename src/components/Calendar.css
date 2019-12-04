@@ -151,6 +151,11 @@ html,body {
   font-size: .9em;
   line-height: 1.6; }
 
+
+.calendar__event-description-text a {
+  color: white;
+}
+
 .calendar__close-event-descr-btn {
   color: white;
   font-weight: bold;

@@ -93,7 +93,7 @@ export default class Calendar extends React.Component {
       startDate,
       endDate
     ).slice(0, 7)
-
+    
     const dayCols = eventsByDate.map(
       d => (
         <DayColumn date={d[0]} events={d[1]} key={d}/>

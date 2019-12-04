@@ -16,9 +16,10 @@ const DayParts = [
 ]
 
 export function parseEvent(event) {
+  console.log(event.id)
   let description
   try {
-    description = replaceFacebookLinks(event.description)
+    description = <span dangerouslySetInnerHTML={{ __html: event.description }}></span>
   } catch {
     description = [
       <React.Fragment key={0}>{event.description}</React.Fragment>
@@ -65,44 +66,13 @@ export function splitEventsByDaypart(events) {
 
 // merege with daypart splitter
 export function splitEventsByDate(events, startDate, endDate) {
+  events = events.filter(e => e.startDT >= startDate)
   // assuming events are sorted in ascending order
   const dateRange = getDateRange(startDate, endDate)
   const res = splitToBins(
     dateRange, (bin, event) => isSameDate(bin, event.startDT),
     events
   )
+  console.log(res)
   return res
-}
-
-
-function replaceFacebookLinks(text) {
-  if (!text) {
-    return [<React.Fragment key={0}></React.Fragment>]
-  }
-  const fbEventRE = /https:\/\/www\.facebook\.com\/events\/\d+\//g
-  const splitText = text.split(fbEventRE)
-  const splitTextIter = splitText.values()
-  let fbEvents = text.match(fbEventRE)
-  if (fbEvents) {fbEvents = fbEvents.values()}
-  const elements = []
-  const elemsCount = 2 * splitText.length - 1
-  let currText
-  for (let i=0; i<elemsCount; i++) {
-    if (!(i%2)) {
-      currText = splitTextIter.next().value
-      if (currText) {
-        elements.push(
-          <React.Fragment key={i}>{currText}</React.Fragment>
-        )
-      }
-    } else {
-      currText = fbEvents.next().value
-      elements.push(
-        <a key={i} href={currText} target='_blank' rel='noopener noreferrer' className='fb-link'>
-          подія на fb
-        </a>
-      )
-    }
-  }
-  return elements
 }
